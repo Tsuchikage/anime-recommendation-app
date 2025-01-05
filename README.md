@@ -1,116 +1,120 @@
-# AnimeRecommendationApp
+# Anime Recommendation App
 
-DEMO: [http://45.136.205.175/](http://45.136.205.175/)
+DEMO: [45.136.205.175](http://45.136.205.175/)
 
-Stack: Python 3.10, FastAPI, Next.js, Nginx, MongoDB
+**Stack:** Python 3.10, FastAPI, Next.js, Nginx, MongoDB
 
-### Архитектура
-![image](https://github.com/Tsuchikage/AnimeRecommendationApp/raw/main/docs/9.png)
+---
 
+### Architecture
+![Architecture](/docs/9.png)
 
-## Run project
+---
+
+## Run the Project
 
 ```bash
-git clone https://github.com/Tsuchikage/AnimeRecommendationApp.git
+git clone https://github.com/Tsuchikage/anime-recommendation-app.git
 ```
+
 ```bash
-mkdir -p AnimeRecommendationApp/server/src/datasets
+mkdir -p anime-recommendation-app/server/src/datasets
 ```
+
 ```bash
-cd AnimeRecommendationApp/server/src/datasets
+cd anime-recommendation-app/server/src/datasets
 ```
+
 ```bash
 wget https://storage.yandexcloud.net/anime/ratings.csv
 ```
+
 ```bash
 wget https://storage.yandexcloud.net/anime/migration.xlsx
 ```
+
 ```bash
-cd ~/AnimeRecommendationApp/
+cd ~/anime-recommendation-app/
 ```
+
 ```bash
 cp .env.example .env
 ```
+
 ```bash
 docker-compose up --build -d
 ```
 
+---
+
 ### Screenshots
-![1](https://github.com/Tsuchikage/AnimeRecommendationApp/raw/main/docs/1.jpg)
-![1](https://github.com/Tsuchikage/AnimeRecommendationApp/raw/main/docs/2.jpg)
-![1](https://github.com/Tsuchikage/AnimeRecommendationApp/raw/main/docs/3.jpg)
-![1](https://github.com/Tsuchikage/AnimeRecommendationApp/raw/main/docs/4.jpg)
-![1](https://github.com/Tsuchikage/AnimeRecommendationApp/raw/main/docs/11.jpg)
-![1](https://github.com/Tsuchikage/AnimeRecommendationApp/raw/main/docs/5.jpg)
-![1](https://github.com/Tsuchikage/AnimeRecommendationApp/raw/main/docs/6.jpg)
-![1](https://github.com/Tsuchikage/AnimeRecommendationApp/raw/main/docs/7.jpg)
-![1](https://github.com/Tsuchikage/AnimeRecommendationApp/raw/main/docs/8.png)
+![Screenshot 1](/docs/1.jpg)
+![Screenshot 2](/docs/2.jpg)
+![Screenshot 3](/docs/3.jpg)
+![Screenshot 4](/docs/4.jpg)
+![Screenshot 5](/docs/11.jpg)
+![Screenshot 6](/docs/5.jpg)
+![Screenshot 7](/docs/6.jpg)
+![Screenshot 8](/docs/7.jpg)
+![Screenshot 9](/docs/8.png)
 
+---
 
-## Описание проекта
+## Project Description
 
-### Задача
-Разработать рекомендательный сервис, предоставляющий качественные рекомендации о том, как скрасить вечер, учитывая пользовательские предпочтения в жанрах и ограниченное количество времени (10-20 минут) для отдыха и развлечений.
+### Objective
+Develop a recommendation service that provides high-quality suggestions for spending leisure time, taking into account user preferences in genres and limited time availability (10-20 minutes).
 
-### Описание рекомендательной системы
-В проекте реализованы две рекомендательные системы: **item-based** (на основе схожести объектов) и **content-based** (на основе содержания).
+---
 
-**Item-based recommendation system**
+### Recommendation System Description
 
-Item-based рекомендательная система основана на анализе схожести между объектами на основе пользовательских оценок. В данном случае используется алгоритм ближайших соседей (k-nearest neighbors) для определения схожих аниме на основе их пользовательских рейтингов. Вот шаги, которые выполняются в этой рекомендательной системе:
+The project includes two types of recommendation systems: **item-based** (based on item similarity) and **content-based** (based on content analysis).
 
-**Подготовка данных:**
+#### **Item-based Recommendation System**
 
-- Загружаются данные об аниме из базы данных MongoDB, включая информацию о заголовке, описании, типе, количестве эпизодов и т.д.
-- Данные делятся на обучающий и тестовый наборы в соотношении **60% / 40%** для обучения и оценки модели.
-- Создается обучающий набор данных **train\_ratings**, который содержит пользовательские оценки для аниме.
+This system analyzes item similarities based on user ratings, leveraging a k-nearest neighbors (k-NN) algorithm. Key steps include:
 
-**Создание матрицы пользователь-объект:**
+- **Data Preparation:**
+  - Load anime data from MongoDB, including titles, descriptions, types, and episode counts.
+  - Split data into **60% training** and **40% testing** sets.
+  - Create a `train_ratings` dataset containing user ratings.
 
-- Обучающий набор данных **train\_ratings** преобразуется в сводную таблицу (pivot table), где пользователи являются строками, а аниме - столбцами, а значениями являются пользовательские оценки.
-- Значения NaN (отсутствующие оценки) заменяются нулями.
-- Разреженная матрица преобразуется в формат CSR (Compressed Sparse Row) для оптимальной работы с ней.
+- **User-Item Matrix Creation:**
+  - Convert `train_ratings` into a pivot table where rows represent users, columns represent anime, and values are ratings.
+  - Replace missing values (NaN) with zeros.
+  - Convert the dense matrix into a CSR (Compressed Sparse Row) format for efficiency.
 
-**Поиск ближайших соседей:**
+- **Finding Nearest Neighbors:**
+  - Initialize a k-NN model using cosine distance and the "brute" algorithm.
+  - Train the model on the training dataset.
 
-- Инициализируется модель ближайших соседей **knn** с использованием косинусного расстояния в качестве метрики и алгоритма "brute".
-- Модель обучается на обучающей матрице данных.
+- **Generating Recommendations:**
+  - Filter anime based on the search query.
+  - Identify the matrix index of the selected anime.
+  - Find the nearest neighbors and retrieve recommendations.
+  - Return a dictionary with recommendations.
 
-**Получение рекомендаций:**
+---
 
-- Для каждого заданного слова (поискового запроса) выполняется следующее:
-- Фильтрация аниме по заданному слову в заголовке.
-- Преобразование идентификатора аниме в индекс матрицы.
-- Поиск ближайших соседей выбранного аниме на основе обучающей матрицы данных.
-- Получение информации о рекомендованных аниме и добавление их в список рекомендаций.
-- Возвращается словарь с рекомендациями.
+#### **Content-based Recommendation System**
 
+This system analyzes similarities between items based on their textual features using TF-IDF and k-NN. Key steps include:
 
-**Content-based recommendation system**
+- **Data Preparation:**
+  - Load anime data from MongoDB.
+  - Create a **tfidf_matrix** based on anime descriptions using TF-IDF.
+  - Load a k-NN model using cosine distance and the "brute" algorithm.
 
-Content-based рекомендательная система основана на анализе сходства между объектами на основе их содержания или признаков. В данном случае используется алгоритм ближайших соседей (k-nearest neighbors) для определения схожих аниме на основе текстовых описаний (synopsis) аниме. Вот шаги, которые выполняются в этой рекомендательной системе:
+- **Generating Recommendations:**
+  - Search for anime titles matching the query.
+  - Find the index of each selected anime in the feature matrix.
+  - Use k-NN to identify similar items.
+  - Return a dictionary with recommendations.
 
-**Подготовка данных:**
-
-- Загружаются данные об аниме из базы данных MongoDB.
-- Создается матрица признаков **tfidf\_matrix** на основе текстовых описаний (synopsis) аниме, используя TF-IDF (Term Frequency-Inverse Document Frequency).
-- Загружается модель ближайших соседей **knn** с использованием косинусного расстояния в качестве метрики и алгоритма "brute".
-
-**Получение рекомендаций:**
-
-- Для каждого заданного слова (поискового запроса) выполняется следующее:
-  - Поиск аниме, в названии которого есть заданное слово (без учета регистра).
-  - Получение идентификаторов найденных аниме.
-  - Для каждого идентификатора аниме выполняется следующее:
-    - Нахождение индекса аниме в матрице признаков.
-    - Поиск ближайших соседей выбранного аниме на основе матрицы признаков.
-    - Получение информации о рекомендованных аниме и добавление их в список рекомендаций.
-- Возвращается словарь с рекомендациями.
-
-
+---
 
 ### Метрики
 **Mean average precision at K (map@K)** - дает представление о том, насколько релевантен список рекомендуемых элементов. 
-[Код подсчета метрик.](https://github.com/Tsuchikage/My-First-Data-Project-2/blob/dev/metrics_mapk_item_user_content_hybrid.ipynb)
 
-![1](https://github.com/Tsuchikage/AnimeRecommendationApp/raw/main/docs/10.png)
+![Metrics Graph](/docs/10.png)
