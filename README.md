@@ -114,7 +114,7 @@ This system analyzes similarities between items based on their textual features 
 
 ---
 
-### Метрики
+### Metrics
 **Mean average precision at K (map@K)** - дает представление о том, насколько релевантен список рекомендуемых элементов. 
 
 ![Metrics Graph](/docs/10.png)
