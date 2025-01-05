@@ -1,23 +1,23 @@
-# AnimeRecommendationApp
+# Приложение для рекомендации аниме
 
 DEMO: [http://45.136.205.175/](http://45.136.205.175/)
 
 Stack: Python 3.10, FastAPI, Next.js, Nginx, MongoDB
 
 ### Архитектура
-![image](https://github.com/Tsuchikage/AnimeRecommendationApp/raw/main/docs/9.png)
+![image](/docs/9.png)
 
 
-## Run project
+## Запуск
 
 ```bash
-git clone https://github.com/Tsuchikage/AnimeRecommendationApp.git
+git clone https://github.com/Tsuchikage/anime-recommendation-app.git
 ```
 ```bash
-mkdir -p AnimeRecommendationApp/server/src/datasets
+mkdir -p anime-recommendation-app/server/src/datasets
 ```
 ```bash
-cd AnimeRecommendationApp/server/src/datasets
+cd anime-recommendation-app/server/src/datasets
 ```
 ```bash
 wget https://storage.yandexcloud.net/anime/ratings.csv
@@ -26,7 +26,7 @@ wget https://storage.yandexcloud.net/anime/ratings.csv
 wget https://storage.yandexcloud.net/anime/migration.xlsx
 ```
 ```bash
-cd ~/AnimeRecommendationApp/
+cd ~/anime-recommendation-app/
 ```
 ```bash
 cp .env.example .env
@@ -35,16 +35,16 @@ cp .env.example .env
 docker-compose up --build -d
 ```
 
-### Screenshots
-![1](https://github.com/Tsuchikage/AnimeRecommendationApp/raw/main/docs/1.jpg)
-![1](https://github.com/Tsuchikage/AnimeRecommendationApp/raw/main/docs/2.jpg)
-![1](https://github.com/Tsuchikage/AnimeRecommendationApp/raw/main/docs/3.jpg)
-![1](https://github.com/Tsuchikage/AnimeRecommendationApp/raw/main/docs/4.jpg)
-![1](https://github.com/Tsuchikage/AnimeRecommendationApp/raw/main/docs/11.jpg)
-![1](https://github.com/Tsuchikage/AnimeRecommendationApp/raw/main/docs/5.jpg)
-![1](https://github.com/Tsuchikage/AnimeRecommendationApp/raw/main/docs/6.jpg)
-![1](https://github.com/Tsuchikage/AnimeRecommendationApp/raw/main/docs/7.jpg)
-![1](https://github.com/Tsuchikage/AnimeRecommendationApp/raw/main/docs/8.png)
+### Скриншоты
+![1](/docs/1.jpg)
+![1](/docs/2.jpg)
+![1](/docs/3.jpg)
+![1](/docs/4.jpg)
+![1](/docs/11.jpg)
+![1](/docs/5.jpg)
+![1](/docs/6.jpg)
+![1](/docs/7.jpg)
+![1](/docs/8.png)
 
 
 ## Описание проекта
@@ -55,7 +55,7 @@ docker-compose up --build -d
 ### Описание рекомендательной системы
 В проекте реализованы две рекомендательные системы: **item-based** (на основе схожести объектов) и **content-based** (на основе содержания).
 
-**Item-based recommendation system**
+**Item-based рекомендательная система**
 
 Item-based рекомендательная система основана на анализе схожести между объектами на основе пользовательских оценок. В данном случае используется алгоритм ближайших соседей (k-nearest neighbors) для определения схожих аниме на основе их пользовательских рейтингов. Вот шаги, которые выполняются в этой рекомендательной системе:
 
@@ -86,7 +86,7 @@ Item-based рекомендательная система основана на
 - Возвращается словарь с рекомендациями.
 
 
-**Content-based recommendation system**
+**Content-based рекомендательная система**
 
 Content-based рекомендательная система основана на анализе сходства между объектами на основе их содержания или признаков. В данном случае используется алгоритм ближайших соседей (k-nearest neighbors) для определения схожих аниме на основе текстовых описаний (synopsis) аниме. Вот шаги, которые выполняются в этой рекомендательной системе:
 
@@ -111,6 +111,4 @@ Content-based рекомендательная система основана �
 
 ### Метрики
 **Mean average precision at K (map@K)** - дает представление о том, насколько релевантен список рекомендуемых элементов. 
-[Код подсчета метрик.](https://github.com/Tsuchikage/My-First-Data-Project-2/blob/dev/metrics_mapk_item_user_content_hybrid.ipynb)
-
-![1](https://github.com/Tsuchikage/AnimeRecommendationApp/raw/main/docs/10.png)
+![1](/docs/10.png)
